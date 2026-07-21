@@ -1,4 +1,4 @@
-# AI Panopticon
+# Panopticon
 
 Personal LLM control plane — unified endpoint, spend tracking, and full conversation traces. You watch the providers, not the other way around.
 
@@ -64,7 +64,7 @@ secrets prompt LANGFUSE_SECRET_KEY
 secrets prompt ZEN_API_KEY
 
 # 2. Start the stack
-cd ~/projetos/hub/ai-panopticon
+cd ~/projetos/hub/panopticon
 bash start.sh
 
 # 3. Use any OpenAI-compatible tool — point it at localhost:4000

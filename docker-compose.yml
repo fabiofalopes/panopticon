@@ -1,4 +1,4 @@
-name: ai-panopticon
+name: panopticon
 
 services:
   redis:

@@ -1,7 +1,7 @@
-# HANDOFF — AI Panopticon
+# HANDOFF — Panopticon
 
 **Session date:** 2026-07-21
-**Project path:** `/Users/fabiofalopes/projetos/hub/ai-panopticon`
+**Project path:** `/Users/fabiofalopes/projetos/hub/panopticon`
 **Formerly:** `local-litellm`
 
 ---
@@ -101,7 +101,7 @@ CLIProxyAPI also has 6 models with `-cliproxy` suffix (internal, for LiteLLM rou
 9. **Added 5 OpenCode Zen free models** — big-pickle, deepseek-v4-flash-free, mimo-v2.5-free, north-mini-code-free, nemotron-3-ultra-free. Endpoint: `https://opencode.ai/zen/v1`. API key required (extracted from OpenCode auth.json → stored as `ZEN_API_KEY` in secrets).
 10. **Added `model_info` pricing to all Alibaba models** — Spend tracking now shows real USD. Pricing based on International (ap-southeast-1) rates. qwen3.7-max has 50% promo active, qwen3.7-plus has 20% promo. qwen3.8-max-preview is 10% trial (estimate).
 11. **DeepSeek/GLM via DashScope is expensive** — deepseek-v4-pro costs $2.50/$5.00 per 1M on DashScope vs $0.44/$0.87 on DeepSeek's own API (4-6× markup). glm-5.2 is similar. Consider direct API keys for cost savings.
-12. **Compose project name fixed** — migrated from `local-litellm` to `ai-panopticon`. `docker compose` commands now work without `-p` flag.
+12. **Compose project name fixed** — migrated from `local-litellm` to `panopticon`. `docker compose` commands now work without `-p` flag.
 13. **OpenCode routing research done** — best approach is adding `litellm` as custom provider in opencode.json (like lmstudio/ollama), NOT replacing built-in providers. OmO overrides completely replace global model. See P2 below.
 
 ## What Was Verified Working
@@ -154,8 +154,8 @@ CLIProxyAPI also has 6 models with `-cliproxy` suffix (internal, for LiteLLM rou
 - **Available secrets not yet mapped**: ANTHROPIC_API_KEY, DEEPSEEK_API_KEY, GEMINI_API_KEY, GROQ_API_KEY, MISTRAL_API_KEY, OPENAI_API_KEY, XAI_API_KEY
 
 ### ~~P7: Fix compose project name~~ ✅ DONE
-- Migrated from `local-litellm` to `ai-panopticon` project name
-- Added `name: ai-panopticon` to docker-compose.yml
+- Migrated from `local-litellm` to `panopticon` project name
+- Added `name: panopticon` to docker-compose.yml
 - `docker compose` commands now work without `-p` flag
 
 ### P8: Update pricing when promos end
@@ -165,18 +165,18 @@ CLIProxyAPI also has 6 models with `-cliproxy` suffix (internal, for LiteLLM rou
 
 ## Open Questions
 
-1. ~~**Project name**~~ — Resolved: `ai-panopticon`
+1. ~~**Project name**~~ — Resolved: `panopticon`
 2. **OpenCode rerouting** — Research done. Best approach: add `litellm` as custom provider + terminal fallback in OmO. **Decision needed**: fallback only, or primary for some agents?
 3. **CLIProxyAPI risk tolerance** — is the account ban risk acceptable for cost arbitrage, or should we hold off on OAuth subscriptions?
 4. **XAMPP approach** — monitor only, or full rerouting?
 5. **Other providers to map** — secrets exist for ANTHROPIC, DEEPSEEK, GEMINI, GROQ, MISTRAL, OPENAI, XAI. Which to add to LiteLLM?
 6. **DashScope cost arbitrage** — DeepSeek via DashScope is 4-6× more expensive than DeepSeek's own API ($2.50 vs $0.44 input). Add direct DeepSeek API key to save money?
-7. ~~**Compose project name**~~ — Fixed. Now `ai-panopticon`.
+7. ~~**Compose project name**~~ — Fixed. Now `panopticon`.
 
 ## How to Start the Stack
 
 ```bash
-cd ~/projetos/hub/ai-panopticon
+cd ~/projetos/hub/panopticon
 bash start.sh
 ```
 
@@ -187,7 +187,7 @@ This will:
 4. Generate `cliproxy-config.yaml` from template (mode 600)
 5. Start all 6 Docker containers
 
-**Note**: Compose project name is now `ai-panopticon`. Standard `docker compose` commands work.
+**Note**: Compose project name is now `panopticon`. Standard `docker compose` commands work.
 
 ## Session Management Notes
 

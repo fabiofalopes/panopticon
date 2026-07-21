@@ -1,5 +1,5 @@
 #!/bin/bash
-# AI Panopticon — startup script
+# Panopticon — startup script
 # Generates .env + cliproxy-config.yaml from secrets system, starts Docker stack
 # Stack: LiteLLM proxy + CLIProxyAPI + PostgreSQL + Langfuse + Redis
 
