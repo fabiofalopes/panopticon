@@ -1,0 +1,98 @@
+name: ai-panopticon
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: litellm-redis
+    restart: unless-stopped
+
+  litellm-db:
+    image: postgres:16-alpine
+    container_name: litellm-db
+    environment:
+      POSTGRES_USER: litellm
+      POSTGRES_PASSWORD: litellm-pw
+      POSTGRES_DB: litellm
+    volumes:
+      - litellm-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U litellm"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  langfuse-db:
+    image: postgres:16-alpine
+    container_name: langfuse-db
+    environment:
+      POSTGRES_USER: langfuse
+      POSTGRES_PASSWORD: langfuse-pw
+      POSTGRES_DB: langfuse
+    volumes:
+      - langfuse-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langfuse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  cli-proxy-api:
+    image: eceasy/cli-proxy-api:latest
+    container_name: cli-proxy-api
+    ports:
+      - "127.0.0.1:8317:8317"
+    volumes:
+      - ./cliproxy-config.yaml:/CLIProxyAPI/config.yaml
+      - ./cliproxy-auths:/root/.cli-proxy-api
+      - ./cliproxy-logs:/CLIProxyAPI/logs
+    restart: unless-stopped
+
+  langfuse-web:
+    image: langfuse/langfuse:2
+    container_name: langfuse-web
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://langfuse:langfuse-pw@langfuse-db:5432/langfuse
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: langfuse-dev-secret-change-in-prod
+      SALT: langfuse-salt-change-in-prod
+      TELEMETRY_ENABLED: "false"
+      LANGFUSE_AUTO_CLICKHOUSE_MIGRATION_DISABLED: "true"
+    depends_on:
+      langfuse-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-stable
+    container_name: litellm-proxy
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./custom_hooks.py:/app/custom_hooks.py
+    command: --config /app/config.yaml --port 4000 --num_workers 4
+    environment:
+      - MODELOS_AI_KEY_API_KEY=${MODELOS_AI_KEY_API_KEY}
+      - ALIBABA_TOKEN_PLAN_KEY_API_KEY=${ALIBABA_TOKEN_PLAN_KEY_API_KEY}
+      - ZEN_API_KEY_API_KEY=${ZEN_API_KEY_API_KEY}
+      - MISTRAL_API_KEY_API_KEY=${MISTRAL_API_KEY_API_KEY:-}
+      - DATABASE_URL=postgresql://litellm:litellm-pw@litellm-db:5432/litellm
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY_API_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY_API_KEY:-}
+      - LANGFUSE_HOST=http://langfuse-web:3000
+    depends_on:
+      litellm-db:
+        condition: service_healthy
+      langfuse-web:
+        condition: service_started
+      cli-proxy-api:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  litellm-pgdata:
+  langfuse-pgdata:

@@ -1,0 +1,19 @@
+# Secrets — NEVER commit
+.env
+cliproxy-config.yaml
+cliproxy-auths/
+cliproxy-logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Docker volumes (managed by compose)
+pgdata/

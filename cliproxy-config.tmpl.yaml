@@ -1,0 +1,54 @@
+host: "0.0.0.0"
+port: 8317
+auth-dir: "/root/.cli-proxy-api"
+api-keys:
+  - "sk-cliproxy-internal"
+remote-management:
+  allow-remote: true
+  secret-key: "cliproxy-mgmt-local"
+routing:
+  strategy: "round-robin"
+  session-affinity: false
+request-retry: 3
+max-retry-credentials: 0
+max-retry-interval: 30
+usage-statistics-enabled: true
+redis-usage-queue-retention-seconds: 3600
+debug: false
+logging-to-file: true
+logs-max-total-size-mb: 100
+error-logs-max-files: 10
+quota-exceeded:
+  switch-project: true
+  switch-preview-model: true
+  antigravity-credits: true
+
+openai-compatibility:
+  - name: "alibaba-token-plan"
+    base-url: "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1"
+    api-key-entries:
+      - api-key: "__ALIBABA_KEY__"
+    models:
+      - name: "qwen3.8-max-preview"
+        alias: "qwen3.8-max-preview-cliproxy"
+      - name: "qwen3.7-plus"
+        alias: "qwen3.7-plus-cliproxy"
+      - name: "qwen3.7-max"
+        alias: "qwen3.7-max-cliproxy"
+      - name: "qwen3.6-flash"
+        alias: "qwen3.6-flash-cliproxy"
+      - name: "deepseek-v4-pro"
+        alias: "deepseek-v4-pro-cliproxy"
+      - name: "glm-5.2"
+        alias: "glm-5.2-cliproxy"
+
+# ── OAuth Subscriptions ─────────────────────────────────
+# To add a subscription, run the OAuth flow from inside the container:
+#   docker exec -it cli-proxy-api ./cli-proxy-api --auth claude
+#   docker exec -it cli-proxy-api ./cli-proxy-api --auth codex
+#   docker exec -it cli-proxy-api ./cli-proxy-api --auth gemini
+#   docker exec -it cli-proxy-api ./cli-proxy-api --auth xai
+#   docker exec -it cli-proxy-api ./cli-proxy-api --auth kimi
+#   docker exec -it cli-proxy-api ./cli-proxy-api --auth qwen
+# Tokens land in /root/.cli-proxy-api/ (mounted to ./cliproxy-auths/)
+# Once present, CLIProxyAPI auto-serves those models — no restart needed.
